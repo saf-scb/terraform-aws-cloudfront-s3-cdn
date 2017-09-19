@@ -15,7 +15,7 @@ resource "aws_cloudfront_origin_access_identity" "default" {
 data "aws_iam_policy_document" "origin" {
   statement {
     actions   = ["s3:GetObject"]
-    resources = ["arn:aws:s3:::$${bucket_name}$${origin_path}*"]
+    resources = ["arn:aws:s3:::$${bucket_name}/$${origin_path}*"]
 
     principals {
       type        = "AWS"
@@ -49,10 +49,10 @@ resource "aws_s3_bucket_policy" "default" {
 }
 
 resource "aws_s3_bucket" "origin" {
-  count  = "${signum(length(var.origin_bucket)) == 1 ? 0 : 1}"
-  bucket = "${module.origin_label.id}"
-  acl    = "private"
-  tags   = "${module.origin_label.tags}"
+  count         = "${signum(length(var.origin_bucket)) == 1 ? 0 : 1}"
+  bucket        = "${module.origin_label.id}"
+  acl           = "private"
+  tags          = "${module.origin_label.tags}"
   force_destroy = "${var.origin_force_destroy}"
 
   cors_rule {

@@ -90,6 +90,7 @@ module "distribution_label" {
 resource "null_resource" "default" {
   triggers {
     bucket             = "${element(compact(concat(list(var.origin_bucket), aws_s3_bucket.origin.*.bucket)), 0)}"
+    bucket_name        = "${element(compact(concat(list(var.origin_bucket), aws_s3_bucket.origin.*.id)), 0)}"
     bucket_domain_name = "${format(var.bucket_domain_format, element(compact(concat(list(var.origin_bucket), aws_s3_bucket.origin.*.bucket)), 0))}"
   }
 
@@ -124,6 +125,18 @@ resource "aws_cloudfront_distribution" "default" {
     }
   }
 
+  origin {
+    domain_name = "${var.services_domain}"
+    origin_id = "ServicesOrigin"
+
+    custom_origin_config {
+      http_port = 80
+      https_port = 443
+      origin_protocol_policy = "match-viewer"
+      origin_ssl_protocols = ["SSLv3"]
+    }
+  }
+
   viewer_certificate {
     acm_certificate_arn            = "${var.acm_certificate_arn}"
     ssl_support_method             = "sni-only"
@@ -149,6 +162,27 @@ resource "aws_cloudfront_distribution" "default" {
     default_ttl            = "${var.default_ttl}"
     min_ttl                = "${var.min_ttl}"
     max_ttl                = "${var.max_ttl}"
+  }
+
+  cache_behavior {
+    allowed_methods       = "${var.allowed_methods}"
+    cached_methods        = "${var.cached_methods}"
+    target_origin_id      = "ServicesOrigin"
+    path_pattern          = "services/*"
+    compress              = "${var.compress}"
+
+    forwarded_values {
+      query_string        = "${var.forward_query_string}"
+
+      cookies {
+        forward           = "${var.forward_cookies}"
+      }
+    }
+
+    viewer_protocol_policy = "${var.viewer_protocol_policy}"
+    default_ttl           = "${var.default_ttl}"
+    min_ttl               = "${var.min_ttl}"
+    max_ttl               = "${var.max_ttl}"
   }
 
   restrictions {

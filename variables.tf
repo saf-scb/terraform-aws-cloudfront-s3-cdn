@@ -164,7 +164,8 @@ variable "parent_zone_name" {
   default = ""
 }
 
-variable "null" {
-  description = "an empty string"
+variable "services_domain" {
+  type        = "string"
   default     = ""
+  description = "Domain to proxy services calls to"
 }

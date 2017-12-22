@@ -26,6 +26,10 @@ output "s3_bucket" {
   value = "${null_resource.default.triggers.bucket}"
 }
 
+output "s3_bucket_name" {
+  value = "${null_resource.default.triggers.bucket_name}"
+}
+
 output "s3_bucket_domain_name" {
   value = "${null_resource.default.triggers.bucket_domain_name}"
 }

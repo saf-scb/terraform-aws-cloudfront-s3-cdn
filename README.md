@@ -66,6 +66,7 @@ aws acm request-certificate --domain-name example.com --subject-alternative-name
 | `origin_force_destroy`         | ``                     | Delete all objects from the bucket  so that the bucket can be destroyed without error (e.g. `true` or `false`)                                                    | No       |
 | `origin_bucket`                | ``                     | Name of S3 bucket                                                                                                                                                 | No       |
 | `origin_path`                  | ``                     | Element that causes CloudFront to request your content from a directory in your Amazon S3 bucket. Begins with `/`. CAUTION! Do not use bare `/` as `origin_path`. | No       |
+| `services_domain               | ``                     | Domain to proxy any calls to /services to.  If deploying static site enter same domain as site                                                                    | Yes      |
 | `parent_zone_id`               | ``                     | ID of the hosted zone to contain this record  (or specify `parent_zone_name`)                                                                                     | Yes      |
 | `parent_zone_name`             | ``                     | Name of the hosted zone to contain this record (or specify `parent_zone_id`)                                                                                      | Yes      |
 
